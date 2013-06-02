@@ -1,0 +1,100 @@
+#!/bin/bash
+###UN SCRIPT PARA LA CONFIGURACION DE CADA MODULO PARA CADA USUARIO
+PATH_SESIONES=/etc/michelle/modulos/Sesiones/config/
+PATH_SEGURIDAD=/etc/michelle/modulos/Seguridad/config/
+PATH_CONTROLCARGA=/etc/michelle/modulos/ControlCarga/config/
+PATH_LIMITACIONES=/etc/michelle/modulos/ControlLimitaciones/config/
+PATH_TRAFICORED=/etc/michelle/modulos/TraficoDeRed/config/
+PATH_AUDITORIA=/etc/michelle/modulos/Auditoria/config/
+
+if [ $UID -ne 0 ]
+then
+   echo "Este script de configuracion solo puede ser empleado por el usuario root"
+   exit 1
+fi
+echo "ESTE MODULO DEBE SER USADO UNA VEZ INSTALADO MICHELLE"
+echo "Ingrese el nombre del usuario que quiere configurar y presione enter"
+read nombre
+echo "Ingrese el numero de Modulo a configurar para este usuario seguido de un enter"
+echo "Configuracion para Modulo Sesiones:1"
+echo "Configuracion para Modulo Seguridad:2"
+echo "Configuracion para Modulo Control de Carga:3"
+echo "Configuracion para Modulo Control de Limitaciones:4"
+echo "Configuracion para Modulo Control de Trafico de Red:5"
+echo "Configuracion para Modulo Auditoria:6"
+echo "Para Salir:0"
+read opcion
+while true
+do
+case $opcion in
+     1)
+     echo "Ingrese la cantidad de Sesiones Maximas"
+     read sesiones
+     echo "MaxUsuarios:$sesiones" 1>>$PATH_SESIONES$nombre;;
+     2)
+     echo "Ingrese el comando a controlar por Modulo Seguridad"
+     echo "Cuando no quiera ingresar mas comandos, ingrese X"
+     read comando
+     while [ "$comando" != "X" ] 
+     do
+     echo "COMANDO:$comando" 1>>$PATH_SEGURIDAD$nombre
+     read comando
+     done;;
+     3)
+     echo "Ingrese el limite de CPU para el Control de Carga"
+     read carga
+     echo "LIMITE:$carga" 1>>$PATH_CONTROLCARGA$nombre
+     ;;
+     4)
+     echo "Ingrese la limitacion del CPU para el Modulo Control de Limitaciones"
+     read ControlCpu
+     echo "CONSUMOCPU:$ControlCpu" 1>>$PATH_LIMITACIONES$nombre
+     echo "Ingrese la limitacion de Memoria para el Modulo Control de Limitaciones"
+     read ControlMem
+     echo "CONSUMOMEM:$ControlMem" 1>>$PATH_LIMITACIONES$nombre
+     echo "Ingrese la limitacion de Procesos para el Modulo Control de Limitaciones"
+     read ControlProc
+     echo "MAXPROCESOS:$ControlProc" 1>>$PATH_LIMITACIONES$nombre
+     echo "Ingrese la limitacion de Sockets para el Modulo Control de Limitaciones"
+     read ControlSockets
+     echo "MAXSOCKETS:$ControlSockets" 1>>$PATH_LIMITACIONES$nombre
+     echo "Ingrese la limitacion del Archivos para el Modulo Control de Limitaciones"
+     read ControlArchivos
+     echo "MAXARCHIVOS:$ControlArchivos" 1>>$PATH_LIMITACIONES$nombre
+     ;;
+     5)
+     echo "Ingrese la Maxima cantidad de paquetes salientes"
+     read paquetes
+     echo "MAXIMOPAQUETES:$paquetes" 1>>$PATH_TRAFICORED$nombre
+     ;;
+     6)
+     echo "Ingrese el numero de Ip para el Modulo Auditoria"
+     read ip
+     echo "IP:$ip" 1>>$PATH_AUDITORIA$nombre
+     echo "Ingrese el tamano maximo del archivo local para Auditoria"
+     read tamanomax
+     echo "BYTESMAX:$tamanomax" 1>>$PATH_AUDITORIA$nombre
+     ;;
+     0)
+     exit 1;;
+     *)
+     echo "No es una opcion valida deben ser numeros del 0 al 6"
+     echo "Configuracion para Modulo Sesiones:1"
+     echo "Configuracion para Modulo Seguridad:2"
+     echo "Configuracion para Modulo Control de Carga:3"
+     echo "Configuracion para Modulo Control de Limitaciones:4"
+     echo "Configuracion para Modulo Control de Trafico de Red:5"
+     echo "Configuracion para Modulo Auditoria:6"
+     echo "Para Salir:0";;
+esac
+     echo "Ingrese el numero del siguiente modulo a cargar seguido de un enter"
+     echo "Configuracion para Modulo Sesiones:1"
+     echo "Configuracion para Modulo Seguridad:2"
+     echo "Configuracion para Modulo Control de Carga:3"
+     echo "Configuracion para Modulo Control de Limitaciones:4"
+     echo "Configuracion para Modulo Control de Trafico de Red:5"
+     echo "Configuracion para Modulo Auditoria:6"
+     echo "Para Salir:0"
+
+read opcion
+done
